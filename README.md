@@ -1,6 +1,8 @@
 # Scalable Product Duplicate Detection
 ### Author: Stan Verstappen
 
+![spdd_logo](https://user-images.githubusercontent.com/33269018/144854214-7832b6ac-e273-4751-b497-23c3bcd981b3.png)
+
 This repository is an implementation of the Locality Sensitive Hashing algorithm for application in product duplicate detection.
 
 ## Features:
@@ -57,6 +59,7 @@ The file should look something like this:
         "featuresMap": {
             ...
         },
+
         "shop": "someshop.com",
         "url": "https://someshop.com/products/modelID1"
     }],
