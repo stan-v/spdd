@@ -18,7 +18,11 @@ def bootstrap(data):
     # Unpack products
     products = [product for products in list(data.values()) for product in products]
     # Select part of the products
-    bootstrap = random.choices(products, k=len(products))
+    # bootstrap = random.choices(products, k=len(products))
+    # Only use doubly-samples products once!
+    bootstrap_indices = np.unique(np.random.randint(low=0, high=len(products), size=len(products)))
+    bootstrap = [products[k] for k in bootstrap_indices]
+
     # Obtain out of bag products
     out_of_bag = [p for p in products if p not in bootstrap]
 
@@ -70,8 +74,10 @@ def train(data):
         results = []
         n = 1155
         for (r,b,threshold) in possible_bands(n):
-            performance = detect(bootstrap_dict, threshold, pre_comp_signature=pre_comp_signature)
-            results.append((r,b,threshold, performance))
+            for compare_sim in np.linspace(0, 1, 11):  # Optimize over compare_sim, given a lsh_sim. 
+
+                performance = detect(bootstrap_dict, lsh_similarity=threshold, compare_similarity=compare_sim,pre_comp_signature=pre_comp_signature)
+                results.append((r,b,threshold, performance, compare_sim))
 
 
         json.dump(results, open('results/bootstrap-{}-results.json'.format(n_bootstrap), 'w'))
@@ -79,7 +85,7 @@ def train(data):
     return boot_results
 
 
-def test(data, boot_results, optimality_metric='F1*', load_from_dir=None):
+def test(data, boot_results, optimality_metric='F1', load_from_dir=None):
     random.seed(123)
 
     # Initialize list of (bootstrap, out-of-bag) samples
@@ -97,22 +103,26 @@ def test(data, boot_results, optimality_metric='F1*', load_from_dir=None):
         if load_from_dir is not None:
             boot_results = json.load(open(load_from_dir + '/bootstrap-{}-results.json'.format(n_bootstrap), 'r'))
 
-        # Perform optimization
-        best_setting_index = np.argmax([r[3][optimality_metric] for r in boot_results])
-        best_settings = boot_results[best_setting_index]
-        eval = detect(out_of_bag_dict, best_settings[2])
-        eval_results.append((*best_settings[0:3], eval))
+        n = 1155
+        for (r,b,threshold) in possible_bands(n):
+
+            # Perform optimization
+            best_setting_index = np.argmax([r[3][optimality_metric] for r in boot_results if r[2] == threshold])
+            best_settings = boot_results[best_setting_index]
+            eval = detect(out_of_bag_dict, lsh_similarity=threshold, compare_similarity=best_settings[4])
+            eval_results.append((*best_settings[0:3], best_settings[4], eval))
  
     os.makedirs('results', exist_ok=True)
     json.dump(eval_results, open('results/oob-results.json', 'w'))
-    print('Average Performance:\n')
-    avg_perf = average_performance(eval_results)
-    print('\n'.join(['{:>22}: {}'.format(k,v) for k, v in avg_perf.items()]))
+    for (r,b,threshold) in possible_bands(n):
+        print('Average Performance for lsh_similarity {}:\n'.format(threshold))
+        avg_perf = average_performance(eval_results, threshold)
+        print('\n'.join(['{:>22}: {}'.format(k,v) for k, v in avg_perf.items()]))
     return eval_results
 
-def average_performance(eval_results):
+def average_performance(eval_results, lsh_similarity):
     # Map to performance metrics
-    eval_performances = [r[3] for r in eval_results]
+    eval_performances = [r[4] for r in eval_results if r[2] == lsh_similarity]
     # Group-by metric and average
     averages = {k: sum(vs := [p[k] for p in eval_performances])/len(vs) for k in eval_performances[0].keys() }
     return averages

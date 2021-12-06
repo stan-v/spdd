@@ -19,7 +19,7 @@ def detect_from_file(file, *args, **kwargs):
     return detect(data, *args, **kwargs)
 
 
-def detect(data, desired_similarity=0.999, num_const = 105, num_mult = 11, pre_comp_signature=None):
+def detect(data, compare_similarity=0.999, lsh_similarity=0.999, num_const = 105, num_mult = 11, pre_comp_signature=None):
 
     modelIDs = list(data.keys())
 
@@ -49,7 +49,7 @@ def detect(data, desired_similarity=0.999, num_const = 105, num_mult = 11, pre_c
     # Find the best values of r and b given n
     n = 3*5*7*11  # Number of minhash functions (1155)
 
-    (r, b, threshold) = best_bands(desired_similarity, n)
+    (r, b, threshold) = best_bands(lsh_similarity, n)
     print('r: {} - b: {} - threshold: {}'.format(r, b, threshold))
 
     # Minhash functions 
@@ -96,9 +96,9 @@ def detect(data, desired_similarity=0.999, num_const = 105, num_mult = 11, pre_c
     len(candidates)
     print('Number of regular candidates: {}'.format(len(candidates)))
 
-    
+    print('Using Jaccard similarity with threshold: {}'.format(compare_similarity))
     # Classify everything and compute performance measures
-    classification = [*classify(flat_products, candidates, signatures, desired_similarity, jaccard), *classify(flat_products, mid_candidates, signatures, 0.0, jaccard, check_brand=False)]
+    classification = [*classify(flat_products, candidates, signatures, compare_similarity, jaccard), *classify(flat_products, mid_candidates, signatures, 0.0, jaccard, check_brand=False)]
     # classification = [*classify(flat_products, candidates, signatures, 0.6, jaccard, check_brand=False)]
 
 

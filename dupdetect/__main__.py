@@ -35,6 +35,7 @@ def main():
 
     parser.add_argument('--train', action='store_true', help='Train the algorithm using 5 bootstraps.')
     parser.add_argument('--test', nargs=1, type=str, metavar='TRAIN_DIR', help='Test on out-of-bag bootstrap samples using result from bootstrap optimization. TRAIN_DIR is the directory containing bootstrap-i-results.json. This is usually the results/ directory.')
+    parser.add_argument('--lsh-sim', nargs=1, metavar='LSH_SIM', type=float, help='Threshold similarity for determining LSH bands. Default 0.999')
     parser.add_argument('-s', '--sim', nargs=1, metavar='SIM', type=float, help='Threshold similarity for classifying as duplicate. Default: 0.999')
     args = parser.parse_args()
 
@@ -52,8 +53,9 @@ def main():
             test(data, None, load_from_dir=args.test[0])
         else:
             from detect import detect
-            
             kwargs = {'desired_similarity': args.sim[0]} if args.sim else {}
+            if args.lsh_sim:
+                kwargs['lsh_similarity'] = args.lsh_sim[0]
             print('Performing duplicate detection on file: ' + args.file[0])
             detect(data, **kwargs)
     
