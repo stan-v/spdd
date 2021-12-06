@@ -42,7 +42,6 @@ def main():
         validate_file(args.file[0])
         import json
         data = json.load(open(args.file[0], 'r'))
-        desired_sim = args.sim[0] if args.sim else 0.6
         if args.train:
             from optimize import train
             print('Training on bootstraps from: ' + args.file[0])
@@ -53,8 +52,10 @@ def main():
             test(data, None, load_from_dir=args.test[0])
         else:
             from detect import detect
+            
+            kwargs = {'desired_similarity': args.sim[0]} if args.sim else {}
             print('Performing duplicate detection on file: ' + args.file[0])
-            detect(data, desired_similarity=desired_sim)
+            detect(data, **kwargs)
     
 if __name__=='__main__':
     main()
