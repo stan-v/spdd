@@ -73,11 +73,11 @@ The `featuresMap` key may contain any specification key-value pairs obtained fro
 
 Note: multiple brands with the same modelID are also put under the same top-level key. 
 
-## Modules 
+## Project structure 
 The project consists of a single package `dupdetect` which can be invoked, running the __main__.py file inside the dupdetect package.
 This file only handles command line input and explanation. Run `python dupdetect -h` to see help information about the command line options. 
 
-### Core modules
+### Modules
 The `detect.py` is runs the entire duplicate detection algorithm for a certain combination of settings. This is performs all duplicate detection and immediate evaluation. 
 
 The `minhashing.py` module handles converting product representations to signatures and finding the options for band configurations and the corresponding threshold value. 
