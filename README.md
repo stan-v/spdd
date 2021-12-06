@@ -4,8 +4,7 @@
 This repository is an implementation of the Locality Sensitive Hashing algorithm for application in product duplicate detection.
 
 ## Features:
-The application by default reads a JSON file with the annotated modelIDs and performs the classification task using 5 bootstraps. For the drawn sample it trains the duplicate detecting algorithm, then applies the trained algorithm on the out-of-bag validation/test set. The predictions are compared to the true attached modelIDs to determine the confusion matrix. This is repeated 5 times and the performance measures are reported. 
-
+The application by default reads a JSON file with the annotated modelIDs and performs the classification task and evaluates the performance on the entire dataset given in the file argument. Alternative modes are available for training and testing the duplicate detecting algorithm using bootstrapping.
 
 ## Requirements:
  - Python >= 3.8
@@ -44,6 +43,8 @@ python dupdetect -test TRAIN_DIR FILE
 ``` 
 where TRAIN_DIR must point to the bootstrap results from the Mode 2 execution. If not specificed, TRAIN_DIR is 'results'. 
 
+Output is written to standard out, but it is advised to write it to file for later inspection. 
+This can be done by appending ` > output.txt` or ` | tee output.txt` to any of the above commands. (This overwrites any existing file named output.txt)
 
 ## Input product file
 The file should look something like this:
