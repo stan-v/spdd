@@ -5,6 +5,9 @@
 
 This repository is an implementation of the Locality Sensitive Hashing algorithm for application in product duplicate detection.
 
+-----------------
+[![python_version](https://img.shields.io/badge/python-v3.8%2B-green?logo=python)](https://python.org)
+![requirements](https://img.shields.io/badge/requires-numpy-green)
 ## Features:
 The application by default reads a JSON file with the annotated modelIDs and performs the classification task and evaluates the performance on the entire dataset given in the file argument. Alternative modes are available for training and testing the duplicate detecting algorithm using bootstrapping.
 

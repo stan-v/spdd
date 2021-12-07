@@ -101,12 +101,16 @@ def detect(data, compare_similarity=0.999, lsh_similarity=0.999, num_const = 105
     classification = [*classify(flat_products, candidates, signatures, compare_similarity, jaccard), *classify(flat_products, mid_candidates, signatures, 0.0, jaccard, check_brand=False)]
     # classification = [*classify(flat_products, candidates, signatures, 0.6, jaccard, check_brand=False)]
 
+    graded_classification = list(grade_classification(flat_products, classification))
 
-    conf_mat = confusion_matrix(list(grade_classification(flat_products, classification)), data_stats['Nd'])
+    conf_mat = confusion_matrix(graded_classification, data_stats['Nd'])
     print() # Print newline
     plot_confusion(conf_mat, data_stats['Nd'], data_stats['n'])
+    # Correctly compute pair performance
+    pair_perf = pair_performance(graded_classification, data_stats['Nd'])
 
-    performance = evaluate(**conf_mat, num_real_duplicates=data_stats['Nd'])
+    
+    performance = evaluate(**conf_mat, **pair_perf, num_real_duplicates=data_stats['Nd'])
     print('\n'.join(['{:>22}: {}'.format(k,v) for k, v in performance.items()]))
 
     print('DONE')

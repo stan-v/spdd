@@ -60,15 +60,13 @@ Actual / Pred. |     True     |     False    | Total
     
     """.format(**confusion, c=confusion['TP'] + confusion['FP'], f=confusion['TN'] + confusion['FN'], w=num_real_duplicates, t=t, s=t-num_real_duplicates))
 
-def evaluate(TP=0, FP=0, TN=0, FN=0, unknown=0, num_real_duplicates=0, num_comparisons=0, num_products=0):
+def evaluate(TP=0, FP=0, TN=0, FN=0, unknown=0, PC=0, PQ=0, num_real_duplicates=0, num_comparisons=0, num_products=0):
 
     num_all_comparison = TP + FP + TN + FN
 
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
 
-    PQ = TP / num_comparisons
-    PC = TP / num_real_duplicates
     if TP == 0:
         F1 = 0
         F1_star = 0

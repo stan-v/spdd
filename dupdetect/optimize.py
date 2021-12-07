@@ -108,7 +108,7 @@ def test(data, boot_results, optimality_metric='F1', load_from_dir=None):
 
             # Perform optimization
             best_setting_index = np.argmax([r[3][optimality_metric] for r in boot_results if r[2] == threshold])
-            best_settings = boot_results[best_setting_index]
+            best_settings = [r for r in boot_results if r[2] == threshold][best_setting_index]
             eval = detect(out_of_bag_dict, lsh_similarity=threshold, compare_similarity=best_settings[4])
             eval_results.append((*best_settings[0:3], best_settings[4], eval))
  
