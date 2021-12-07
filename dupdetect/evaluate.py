@@ -27,9 +27,9 @@ def grade_classification(flat_products, classification):
         real_dupe = is_real_duplicate(flat_products[i1], flat_products[i2])
         yield (i1, i2, obs_type(pred, real_dupe))
 
-def confusion_matrix(graded_classification, num_real_duplicates):
+def confusion_matrix(graded_classification, num_real_duplicates, num_products):
     confusion = {'TP': 0, 'FP': 0, 'TN': 0, 'FN': 0, 'unknown': 0, 'num_comparisons': len(graded_classification)}
-    total = 1624 * 1623 / 2
+    total = num_products * (num_products-1) / 2
     for p1, p2, c in graded_classification:
         if c == 'TP':
             confusion['TP'] += 1
@@ -44,7 +44,7 @@ def confusion_matrix(graded_classification, num_real_duplicates):
 
 def pair_performance(graded_classification, num_real_duplicates):
     num_comparisons = len(graded_classification)
-    Df = [1 if c == 'TP' or c == 'FN' else 0 for i1, i2, c in graded_classification]
+    Df = sum([1 if c == 'TP' or c == 'FN' else 0 for i1, i2, c in graded_classification])
     return {'PQ': Df/num_comparisons, 'PC': Df/num_real_duplicates}
 
 
@@ -62,7 +62,8 @@ Actual / Pred. |     True     |     False    | Total
 
 def evaluate(TP=0, FP=0, TN=0, FN=0, unknown=0, PC=0, PQ=0, num_real_duplicates=0, num_comparisons=0, num_products=0):
 
-    num_all_comparison = TP + FP + TN + FN
+    assert TP + FP + TN + FN == num_products * (num_products-1) / 2 
+    num_all_comparison = num_products * (num_products-1) / 2 
 
     precision = TP / (TP + FP)
     recall = TP / (TP + FN)
