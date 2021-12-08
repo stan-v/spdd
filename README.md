@@ -44,7 +44,7 @@ python dupdetect --train FILE
 ``` 
 Mode 3: test on out-of-bag samples from a file
 ```bash
-python dupdetect -test TRAIN_DIR FILE
+python dupdetect --test TRAIN_DIR FILE
 ``` 
 where TRAIN_DIR must point to the bootstrap results from the Mode 2 execution. If not specificed, TRAIN_DIR is 'results'. 
 
