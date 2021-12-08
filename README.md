@@ -34,9 +34,9 @@ Open your preferred command line and run the command within the spdd project fol
 python dupdetect FILE
 ``` 
 where FILE points to a valid JSON file containing the products you want to analyse. 
-The optional argument `--sim SIM` can change the desired similarity for the analysis, for example 
-`python dupdetect --sim 0.999 data/data.json`, which will pick the bands to match the desired similarity as close as possible, and uses
-this similarity as threshold value.
+The optional argument `--sim SIM` can change the desired similarity for classification, for example 
+`python dupdetect --sim 0.999 data/data.json`, will classify using this similarity as threshold value.
+The optional argument `--lsh-sim LSH_SIM` can change the choice of bands used by the LSH algorithm. The bands will be picked to as closely match the threshold value to LSH_SIM. 
 
 Mode 2: train on bootstraps from a file:
 ```bash
