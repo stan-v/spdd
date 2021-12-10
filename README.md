@@ -74,7 +74,7 @@ The file should look something like this:
 ```
 The `featuresMap` key may contain any specification key-value pairs obtained from the webshop.
 
-Note: multiple brands with the same modelID are also put under the same top-level key. 
+Note: multiple products with the same modelID are also put under the same top-level key. 
 
 ## Project structure 
 The project consists of a single package `dupdetect` which can be invoked, running the __main__.py file inside the dupdetect package.
